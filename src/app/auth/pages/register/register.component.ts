@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -15,13 +17,23 @@ export class RegisterComponent implements OnInit {
     name: ['Test 1', [Validators.required]]
   })
 
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
   register(){
-    this.router.navigateByUrl('/dashboard');
+    const { email, password, name } = this.registerForm.value;
+    this.authService.register(email, password, name).subscribe({
+      next: (valid) => {
+        if(!valid.error){
+          this.router.navigateByUrl('/dashboard');
+        }else {
+          const { error: { msg } } = valid;
+          Swal.fire('Error', msg, 'error');
+        }
+      }
+    })
   }
 
 }

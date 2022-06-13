@@ -34,6 +34,19 @@ export class AuthService {
       );
   }
 
+  register(email: string, password: string, name: string){
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/new`, { email, password, name })
+      .pipe(
+        tap((res) => {
+          if(res.ok){
+            this.setUserData(res);
+          }
+        }),
+        map((resp) => resp.ok),
+        catchError((err) => of(err))
+      )
+  }
+
   validateToken(): Observable<boolean> {
     const currentToken = localStorage.getItem('token');
     const headers = new HttpHeaders().set('x-token', currentToken || '');
@@ -54,10 +67,13 @@ export class AuthService {
 
   setUserData(res: AuthResponse) {
     localStorage.setItem('token', res.token!);
+    console.log(res);
+    
     this._user = {
       token: res.token!,
       uid: res.uid!,
       name: res.name!,
+      email: res.email!,
     };
   }
 }
