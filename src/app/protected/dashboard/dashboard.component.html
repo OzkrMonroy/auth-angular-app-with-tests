@@ -3,6 +3,6 @@
 
 <p>This page will be displayed only the user is authenticated</p>
 <h4>User info:</h4>
-<pre>...</pre>
+<pre>{{ user | json }}</pre>
 
 <button (click)="logout()">Logout</button>
