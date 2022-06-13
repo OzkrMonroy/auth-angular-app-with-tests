@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ValidateTokenGuard } from './guards/validate-token.guard';
 
 const routes: Routes = [
   {
@@ -8,6 +9,8 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [ValidateTokenGuard],
+    canLoad: [ValidateTokenGuard],
     loadChildren: () => import(/*webpackChunkName: "DashboardModule" */'./protected/protected.module').then(m => m.ProtectedModule)
   },
   {
