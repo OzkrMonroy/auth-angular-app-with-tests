@@ -2,10 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import {
-  AuthResponse,
-  User,
-} from '../interfaces/auth.interface';
+import { AuthResponse, User } from '../interfaces/auth.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -34,17 +31,18 @@ export class AuthService {
       );
   }
 
-  register(email: string, password: string, name: string){
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/new`, { email, password, name })
+  register(email: string, password: string, name: string) {
+    return this.http
+      .post<AuthResponse>(`${this.baseUrl}/auth/new`, { email, password, name })
       .pipe(
         tap((res) => {
-          if(res.ok){
+          if (res.ok) {
             this.setUserData(res);
           }
         }),
         map((resp) => resp.ok),
         catchError((err) => of(err))
-      )
+      );
   }
 
   validateToken(): Observable<boolean> {
@@ -61,14 +59,13 @@ export class AuthService {
       );
   }
 
-  logout(){
+  logout() {
     localStorage.clear();
   }
 
   setUserData(res: AuthResponse) {
     localStorage.setItem('token', res.token!);
-    console.log(res);
-    
+
     this._user = {
       token: res.token!,
       uid: res.uid!,
