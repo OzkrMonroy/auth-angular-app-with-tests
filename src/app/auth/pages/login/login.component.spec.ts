@@ -1,4 +1,8 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  DebugElement,
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -6,10 +10,11 @@ import { LoginComponent } from './login.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLinkWithHref } from '@angular/router';
 import { of } from 'rxjs';
 import { loginErrorResponse } from '../../../mocks/auth.mocks';
 import Swal from 'sweetalert2';
+import { By } from '@angular/platform-browser';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -40,6 +45,13 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('Login should have a router link to register page', () => {
+    const debugElement: DebugElement = fixture.debugElement.query(
+      By.directive(RouterLinkWithHref)
+    );
+    expect(debugElement.attributes['routerLink']).toBe('/auth/register');
   });
 
   it('The login should have two fields', () => {
